@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner Continuidade Médica™ · Ivan Vianna CFP®</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #1A3C2E;
+    --verde-med: #2E5C46;
+    --ouro: #d7ae4d;
+    --ouro-claro: #f8e38c;
+    --branco: #ffffff;
+    --risco-bg: rgba(176,58,46,0.12);
+    --risco-borda: rgba(176,58,46,0.30);
+    --risco-cor: #f1948a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--verde);
+    color: var(--branco);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOPO ── */
+  .topo {
+    padding: 1.4rem 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 580px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .topo-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ouro-claro);
+    letter-spacing: 0.08em;
+  }
+  .topo-cfp {
+    font-size: 0.80rem;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── PROGRESS ── */
+  .prog {
+    max-width: 580px;
+    margin: 1.4rem auto 0;
+    padding: 0 1.5rem;
+    width: 100%;
+    display: none;
+  }
+  .prog-bg {
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--ouro-claro), var(--ouro));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .prog-num {
+    font-size: 0.80rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 0.4rem;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+
+  /* ── WRAP ── */
+  .wrap {
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 2.75rem 1.5rem 5rem;
+    width: 100%;
+    flex: 1;
+  }
+
+  /* ── TELA INTRO ── */
+  #tela-intro { display: block; }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--branco);
+    margin-bottom: 1rem;
+    letter-spacing: -0.015em;
+  }
+  .headline em {
+    font-style: italic;
+    color: var(--ouro-claro);
+  }
+
+  .sub {
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: #FFFFFF;
+    line-height: 1.65;
+    margin-bottom: 2.25rem;
+    max-width: 460px;
+  }
+  .sub strong { color: var(--branco); font-weight: 600; }
+
+  /* FORM */
+  .form-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .campo input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    color: var(--branco);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .campo input:focus { border-color: rgba(248,227,140,0.45); }
+  .campo input::placeholder { color: rgba(255,255,255,0.60); }
+  .campo-erro {
+    font-size: 0.75rem;
+    color: #f1948a;
+    margin-top: 0.25rem;
+    display: none;
+    padding-left: 0.25rem;
+  }
+
+  .btn-comecar {
+    width: 100%;
+    padding: 1.05rem;
+    background: linear-gradient(135deg, var(--ouro-claro) 0%, var(--ouro) 50%, var(--ouro-claro) 100%);
+    border: none;
+    border-radius: 10px;
+    color: var(--verde);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.22s;
+    box-shadow: 0 4px 22px rgba(215,174,77,0.28);
+    letter-spacing: 0.02em;
+    margin-top: 0.25rem;
+  }
+  .btn-comecar:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(215,174,77,0.42); }
+
+  .privacidade {
+    font-size: 0.80rem;
+    color: rgba(255,255,255,0.90);
+    text-align: center;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+  }
+
+  /* ── TELA QUIZ ── */
+  #tela-quiz { display: none; }
+
+  .q-card { animation: entra 0.32s ease both; }
+  @keyframes entra {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-texto {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.25rem, 3.8vw, 1.6rem);
+    font-weight: 700;
+    color: var(--branco);
+    line-height: 1.32;
+    margin-bottom: 1.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .opcoes { display: flex; flex-direction: column; gap: 0.58rem; margin-bottom: 1.6rem; }
+
+  .op {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.95rem 1.1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.09);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    color: rgba(255,255,255,0.82);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.97rem;
+    font-weight: 400;
+    line-height: 1.4;
+    transition: all 0.17s;
+    width: 100%;
+  }
+  .op:hover { border-color: rgba(248,227,140,0.32); background: rgba(248,227,140,0.04); }
+  .op.ativa { border-color: var(--ouro); background: rgba(248,227,140,0.08); color: var(--branco); font-weight: 500; }
+
+  .op-dot {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.18);
+    transition: all 0.17s;
+  }
+  .op.ativa .op-dot {
+    background: var(--ouro);
+    border-color: var(--ouro);
+    box-shadow: 0 0 0 3px rgba(215,174,77,0.18);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .btn-voltar {
+    background: none; border: none;
+    color: rgba(255,255,255,0.80);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    transition: color 0.17s;
+  }
+  .btn-voltar:hover { color: rgba(255,255,255,0.90); }
+
+  .btn-av {
+    padding: 0.78rem 1.8rem;
+    background: linear-gradient(135deg, var(--ouro-claro), var(--ouro));
+    border: none;
+    border-radius: 9px;
+    color: var(--verde);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 14px rgba(215,174,77,0.22);
+    letter-spacing: 0.02em;
+  }
+  .btn-av:disabled { opacity: 0.28; cursor: not-allowed; transform: none !important; box-shadow: none; }
+  .btn-av:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 5px 22px rgba(215,174,77,0.38); }
+
+  /* ── LOADING ── */
+  #tela-loading { display: none; text-align: center; padding: 3rem 1rem; }
+
+  .orb {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ouro-claro), var(--ouro));
+    margin: 0 auto 1.4rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.7rem; color: var(--verde);
+    animation: orb 1.5s ease-in-out infinite;
+  }
+  @keyframes orb {
+    0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(248,227,140,0.28); }
+    50%      { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(248,227,140,0); }
+  }
+  .load-t { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .load-s { font-size: 0.95rem; color: rgba(255,255,255,0.85); font-style: italic; margin-bottom: 1.6rem; }
+  .dots { display: flex; gap: 5px; justify-content: center; }
+  .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--ouro); animation: dd 1.2s ease-in-out infinite; }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dd { 0%,100%{opacity:0.2;transform:translateY(0)} 50%{opacity:1;transform:translateY(-5px)} }
+
+  /* ── RESULTADO ── */
+  #tela-resultado { display: none; }
+
+  /* SCORE */
+  .score-area {
+    text-align: center;
+    padding: 0.5rem 0 2rem;
+    border-bottom: 1px solid rgba(248,227,140,0.10);
+    margin-bottom: 2rem;
+  }
+  .score-para {
+    font-size: 0.80rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: #f8e38c;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .score-nome-el {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.55rem);
+    font-weight: 700;
+    color: var(--branco);
+    margin-bottom: 1.75rem;
+  }
+
+  /* CÍRCULO DE SCORE */
+  .icm-nome {
+    font-size: 0.80rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #f8e38c;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.6rem;
+  }
+  .score-circulo-wrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  .score-ring {
+    position: relative;
+    width: 110px; height: 110px;
+  }
+  .score-ring svg {
+    position: absolute; top: 0; left: 0;
+    transform: rotate(-90deg);
+  }
+  .ring-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 6; }
+  .ring-fill {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 302;
+    stroke-dashoffset: 302;
+    transition: stroke-dashoffset 1.2s ease;
+  }
+  .score-centro {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px;
+  }
+  .score-num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 600;
+    color: var(--branco);
+    line-height: 1;
+  }
+  .score-de100 {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  /* BADGE NÍVEL */
+  .nivel-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .nivel-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .nivel-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    font-weight: 700;
+    color: var(--branco);
+    line-height: 1.2;
+  }
+
+  /* cores por nível */
+  .nivel-protegido .nivel-label { color: #58d68d; }
+  .nivel-parcial   .nivel-label { color: var(--ouro-claro); }
+  .nivel-risco     .nivel-label { color: #f0b27a; }
+  .nivel-critico   .nivel-label { color: #f1948a; }
+  .ring-fill.protegido { stroke: #58d68d; }
+  .ring-fill.parcial   { stroke: var(--ouro-claro); }
+  .ring-fill.risco     { stroke: #f0b27a; }
+  .ring-fill.critico   { stroke: #f1948a; }
+
+  /* DESCOBERTA PRINCIPAL */
+  .descoberta {
+    background: rgba(248,227,140,0.06);
+    border-left: 3px solid var(--ouro);
+    border-radius: 0 10px 10px 0;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .descoberta-label {
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ouro);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .descoberta-texto {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.10rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--branco);
+    line-height: 1.55;
+  }
+
+  /* RISCOS */
+  .riscos-titulo {
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #f8e38c;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+  }
+  .risco-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    background: var(--risco-bg);
+    border: 1px solid var(--risco-borda);
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    animation: entra 0.4s ease both;
+  }
+  .risco-item:nth-child(2) { animation-delay: 0.07s; }
+  .risco-item:nth-child(3) { animation-delay: 0.14s; }
+  .risco-icon { color: var(--risco-cor); font-size: 0.9rem; flex-shrink: 0; margin-top: 2px; }
+  .risco-txt { font-size: 0.95rem; color: rgba(255,255,255,0.88); line-height: 1.5; }
+  .risco-txt strong { color: var(--branco); font-weight: 600; display: block; margin-bottom: 0.2rem; }
+  .risco-txt span { font-size: 0.85rem; color: #FFFFFF; }
+
+  .forte-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    background: rgba(30,126,74,0.08);
+    border: 1px solid rgba(30,126,74,0.20);
+    border-radius: 10px;
+    margin-bottom: 0.55rem;
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.80);
+  }
+  .forte-icon { color: #58d68d; font-size: 0.9rem; }
+
+  /* CTA */
+  .cta-wrap {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(248,227,140,0.10);
+    padding-top: 2rem;
+  }
+  .cta-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 3vw, 1.35rem);
+    font-weight: 700;
+    color: var(--branco);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+  .cta-desc {
+    font-size: 1rem;
+    color: #FFFFFF;
+    line-height: 1.65;
+    margin-bottom: 1.4rem;
+    font-style: italic;
+  }
+  .btn-diag {
+    display: block;
+    width: 100%;
+    padding: 1.05rem 1.5rem;
+    background: linear-gradient(135deg, var(--ouro-claro) 0%, var(--ouro) 50%, var(--ouro-claro) 100%);
+    border: none;
+    border-radius: 10px;
+    color: var(--verde);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 22px rgba(215,174,77,0.28);
+    transition: all 0.22s;
+    margin-bottom: 0.7rem;
+  }
+  .btn-diag:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(215,174,77,0.44); }
+
+  .btn-wpp {
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1.25rem;
+    background: transparent;
+    border: 1.5px solid rgba(248,227,140,0.60);
+    border-radius: 10px;
+    color: #f8e38c;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .btn-wpp:hover { border-color: rgba(248,227,140,0.50); background: rgba(248,227,140,0.05); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 0 1.5rem 2.5rem;
+    font-size: 0.78rem;
+    color: #FFFFFF;
+    line-height: 1.7;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  footer strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 2rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-logo">VIDA</div>
+  <div class="topo-cfp">Ivan Vianna · CFP®</div>
+</div>
+
+<div class="prog" id="prog">
+  <div class="prog-bg"><div class="prog-fill" id="prog-fill"></div></div>
+  <div class="prog-num" id="prog-num"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ── INTRO ── -->
+  <div id="tela-intro">
+    <div class="headline">
+      Seu patrimônio sobreviveria<br>se você não pudesse<br><em>trabalhar amanhã?</em>
+    </div>
+    <div class="sub">
+      Em menos de 3 minutos descubra <strong>o que pode destruir anos de trabalho</strong> — e o que ainda dá tempo de proteger.
+    </div>
+
+    <div class="form-mini">
+      <div class="campo">
+        <input type="text" id="inp-nome" placeholder="Seu nome" autocomplete="name">
+        <div class="campo-erro" id="err-nome">Informe seu nome para continuar.</div>
+      </div>
+      <div class="campo" style="margin-top:0.75rem;">
+        <input type="email" id="inp-email" placeholder="Seu melhor e-mail" autocomplete="email">
+        <div class="campo-erro" id="err-email">Informe um e-mail válido.</div>
+      </div>
+    </div>
+    <button class="btn-comecar" onclick="comecar()">Descobrir agora →</button>
+    <div class="privacidade">Gratuito · Seus dados não são compartilhados</div>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="tela-quiz">
+    <div class="q-card" id="q-card">
+      <div class="q-texto" id="q-texto"></div>
+      <div class="opcoes" id="q-opcoes"></div>
+      <div class="nav">
+        <button class="btn-voltar" onclick="voltar()">← Voltar</button>
+        <button class="btn-av" id="btn-av" onclick="avancar()" disabled>Continuar →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOADING ── -->
+  <div id="tela-loading">
+    <div class="orb">◆</div>
+    <div class="load-t">Calculando sua exposição</div>
+    <div class="load-s">Identificando os pontos de vulnerabilidade...</div>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- ── RESULTADO ── -->
+  <div id="tela-resultado">
+
+    <div class="score-area">
+      <div class="score-para">Scanner Continuidade Médica™ · Resultado</div>
+      <div class="score-nome-el" id="res-nome"></div>
+
+      <div class="score-circulo-wrap">
+        <div class="icm-nome">Índice de Continuidade Médica™</div>
+        <div class="score-ring">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle class="ring-bg" cx="55" cy="55" r="48"/>
+            <circle class="ring-fill" id="ring-fill" cx="55" cy="55" r="48"/>
+          </svg>
+          <div class="score-centro">
+            <div class="score-num" id="score-num">—</div>
+            <div class="score-de100">ICM™ · /100</div>
+          </div>
+        </div>
+        <div class="nivel-badge" id="nivel-badge">
+          <div class="nivel-label" id="nivel-label"></div>
+          <div class="nivel-titulo" id="nivel-titulo"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESCOBERTA PRINCIPAL -->
+    <div class="descoberta">
+      <div class="descoberta-label">Sua principal descoberta</div>
+      <div class="descoberta-texto" id="descoberta-texto"></div>
+    </div>
+
+    <!-- RISCOS -->
+    <div id="riscos-wrap">
+      <div class="riscos-titulo" id="riscos-titulo"></div>
+      <div id="riscos-lista"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wrap">
+      <div class="cta-titulo" id="cta-titulo"></div>
+      <div class="cta-desc" id="cta-desc"></div>
+      <a class="btn-diag" id="btn-diag" href="#" target="_blank">Agendar meu Diagnóstico Patrimonial Completo →</a>
+      <a class="btn-wpp" id="btn-wpp" href="#" target="_blank">Conversar com Ivan Vianna</a>
+    </div>
+
+  </div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <strong>Ivan Vianna · CFP® · Planejador financeiro · Arquiteto de patrimônio</strong><br>
+  CNPJ 56.099.913/0001-61 · ivanviannafinancas.com.br<br>
+  Finalidade informativa e educacional. Não constitui recomendação de investimento ou parecer técnico individualizado. © 2026
+</footer>
+
+<script>
+const CONFIG = {
+  hotmart: 'https://pay.hotmart.com/N106155832N',
+  landing: 'https://ivanlvianna.github.io/diagnosticovidamedicos/', // ← link Hotmart Diagnóstico VIDA Médicos
+  wpp: '5511979530555',
+  webhook: 'https://script.google.com/macros/s/AKfycbzsVpO_OoWVjENJyDP2MCY-wGNqSnuz1oc6txaATRksQNRJCwrOaJaKlGzv2bQQI0I/exec'
+};
+
+function enviarWebhook(score, nivelLabel) {
+  const agora = new Date();
+  const data = agora.toLocaleDateString('pt-BR') + ', ' + agora.toLocaleTimeString('pt-BR');
+  const payload = {
+    sheet: 'Continuidade Medica',
+    data:   data,
+    nome:   captura.nome,
+    email:  captura.email,
+    wpp:    captura.wpp,
+    icm:    score + '/100',
+    nivel:  nivelLabel,
+    track:  isPJ ? 'Socio de clinica / PJ' : 'Medico PF'
+  };
+  fetch(CONFIG.webhook, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+// ── PERGUNTAS BASE (5) ──
+// P0 é o "soco" emocional — e também detecta dependência de renda ativa
+const perguntas = [
+  {
+    id: 'dependencia',
+    texto: 'Se você não pudesse trabalhar amanhã, por quanto tempo sua família manteria o padrão de vida atual?',
+    opcoes: [
+      { t: 'Mais de 2 anos — tenho renda passiva suficiente',          p: 5  },
+      { t: 'Entre 6 meses e 2 anos',                                   p: 35 },
+      { t: 'Menos de 6 meses',                                         p: 75 },
+      { t: 'Não sei calcular isso',                                     p: 90 }
+    ],
+    risco: { label: 'Sua renda depende quase inteiramente da sua presença física', detalhe: 'Plantões e consultas são ativos com prazo de validade biológico. Sem renda passiva estruturada, uma interrupção inesperada da carreira pode destruir o padrão de vida que você construiu.' }
+  },
+  {
+    id: 'pj',
+    texto: 'Sua renda vem apenas do seu trabalho ou também de um negócio que continuaria funcionando sem você?',
+    opcoes: [
+      { t: 'Apenas do meu trabalho — consultas, plantões ou cirurgias', p: 0, tag: 'pf' },
+      { t: 'Sou sócio de clínica ou consultório que funciona mesmo sem mim', p: 0, tag: 'pj_ok' },
+      { t: 'Sou sócio de clínica, mas ela depende da minha presença', p: 0, tag: 'pj' }
+    ]
+  },
+  {
+    id: 'processo',
+    texto: 'Hoje, um processo médico poderia atingir seu patrimônio pessoal?',
+    opcoes: [
+      { t: 'Não — tenho seguro RCM e blindagem patrimonial adequados', p: 5  },
+      { t: 'Talvez — tenho seguro, mas não sei se cobre tudo',          p: 50 },
+      { t: 'Sim — meu patrimônio está exposto',                         p: 85 },
+      { t: 'Não sei',                                                   p: 92 }
+    ],
+    risco: { label: 'Seu patrimônio pessoal está exposto a processos médicos', detalhe: 'Sem blindagem patrimonial e cobertura adequada, uma decisão judicial pode atingir imóveis e investimentos que você considera protegidos.' }
+  },
+  {
+    id: 'previdencia',
+    texto: 'Sua aposentadoria está estruturada para manter seu padrão de vida sem depender de plantões?',
+    opcoes: [
+      { t: 'Sim — plano previdenciário estruturado e revisado',          p: 5  },
+      { t: 'Tenho investimentos, mas sem estratégia previdenciária',     p: 45 },
+      { t: 'Não tenho nada estruturado para isso',                       p: 88 },
+      { t: 'Nunca calculei o valor que precisarei acumular',             p: 93 }
+    ],
+    risco: { label: 'Não há estrutura de independência financeira para além dos plantões', detalhe: 'O INSS cobre em média 15% da renda ativa de médicos. A lacuna entre o que você ganha hoje e o que terá ao reduzir o ritmo pode ser enorme — e invisível até ser tarde demais.' }
+  },
+  {
+    id: 'sucessao',
+    texto: 'Se você falecesse hoje, seu patrimônio chegaria a quem você quer — sem inventário prolongado?',
+    opcoes: [
+      { t: 'Sim — planejamento sucessório formalizado',            p: 5  },
+      { t: 'Tenho testamento simples, sem estrutura completa',      p: 38 },
+      { t: 'Não tenho nenhum planejamento sucessório',              p: 85 },
+      { t: 'Nunca pensei nisso',                                    p: 93 }
+    ],
+    risco: { label: 'Não existe estrutura sucessória formal', detalhe: 'Sem planejamento, o inventário judicial pode consumir entre 10% e 30% do patrimônio — além de anos de conflito familiar no pior momento possível.' }
+  }
+];
+
+// PERGUNTA DE CAPTURA WPP — inserida na posição 3 (após investir tempo)
+const pergunta_wpp = {
+  id: 'wpp_capture',
+  texto: 'Para onde envio uma cópia do seu resultado e das prioridades identificadas?',
+  tipo: 'wpp'
+};
+const pergunta_clinica = {
+  id: 'clinica',
+  texto: 'A sua clínica funcionaria por 30 dias sem a sua presença?',
+  opcoes: [
+    { t: 'Sim — processos documentados e equipe autônoma',           p: 5  },
+    { t: 'Com dificuldade, mas funcionaria parcialmente',             p: 45 },
+    { t: 'Não — a clínica depende da minha presença diária',         p: 85 },
+    { t: 'Nunca testei isso',                                         p: 90 }
+  ],
+  risco: { label: 'A clínica não sobrevive sem você — e isso é risco patrimonial direto', detalhe: 'Uma clínica que depende do sócio-fundador não é um ativo — é um emprego com CNPJ. Em caso de incapacidade, o valor do negócio pode desaparecer junto com sua presença.' }
+};
+
+// ── ESTADO ──
+let qIdx = 0;
+let respostas = [];
+let pergAtivas = [];
+let isPJ = false;
+let captura = {};
+
+function comecar() {
+  const nome  = document.getElementById('inp-nome').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+  let ok = true;
+  if (!nome) { document.getElementById('err-nome').style.display = 'block'; ok = false; }
+  else document.getElementById('err-nome').style.display = 'none';
+  if (!email || !email.includes('@')) { document.getElementById('err-email').style.display = 'block'; ok = false; }
+  else document.getElementById('err-email').style.display = 'none';
+  if (!ok) return;
+
+  captura = { nome, email, wpp: '' };
+  pergAtivas = [...perguntas];
+  // Insere captura de WPP na posição 3 (index 3), após 3 perguntas respondidas
+  pergAtivas.splice(3, 0, pergunta_wpp);
+  respostas = new Array(pergAtivas.length).fill(null);
+  qIdx = 0;
+
+  document.getElementById('tela-intro').style.display = 'none';
+  document.getElementById('prog').style.display = 'block';
+  document.getElementById('tela-quiz').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  const q = pergAtivas[qIdx];
+  const total = pergAtivas.length;
+  const pct = Math.round((qIdx / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-num').textContent = `${qIdx + 1} de ${total}`;
+
+  document.getElementById('q-texto').textContent = q.texto;
+
+  const cont = document.getElementById('q-opcoes');
+  cont.innerHTML = '';
+
+  // Tela especial de captura de WPP
+  if (q.tipo === 'wpp') {
+    cont.innerHTML = `
+      <div style="margin-bottom:0.5rem;">
+        <input type="tel" id="wpp-inline" placeholder="(11) 99999-9999" autocomplete="tel"
+          style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;color:#fff;font-family:'DM Sans',sans-serif;font-size:1rem;outline:none;transition:border-color 0.2s;">
+        <div id="err-wpp-inline" style="font-size:0.75rem;color:#f1948a;margin-top:0.25rem;display:none;padding-left:0.25rem;">Informe um WhatsApp válido.</div>
+      </div>
+      <div style="font-size:0.72rem;color:rgba(255,255,255,0.60);margin-top:0.5rem;">Seus dados não são compartilhados.</div>`;
+
+    const inp = document.getElementById('wpp-inline');
+    inp.addEventListener('input', () => {
+      const ok = inp.value.replace(/\D/g,'').length >= 10;
+      document.getElementById('btn-av').disabled = !ok;
+      if (ok) document.getElementById('err-wpp-inline').style.display = 'none';
+    });
+
+    // Foco automático
+    setTimeout(() => inp.focus(), 100);
+    document.getElementById('btn-av').disabled = true;
+    document.getElementById('btn-av').textContent = 'Ver meu resultado →';
+
+    const card = document.getElementById('q-card');
+    card.style.animation = 'none';
+    requestAnimationFrame(() => { card.style.animation = 'entra 0.32s ease both'; });
+    return;
+  }
+
+  q.opcoes.forEach((op, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'op' + (respostas[qIdx] === i ? ' ativa' : '');
+    btn.innerHTML = `<span class="op-dot"></span><span>${op.t}</span>`;
+    btn.addEventListener('click', () => {
+      // Detecção PJ silenciosa — 3 opções
+      if (q.id === 'pj') {
+        const tag = op.tag;
+        const querClinica = tag === 'pj' || tag === 'pj_ok';
+        if (querClinica && !isPJ) {
+          isPJ = true;
+          // Insere pergunta da clínica depois da pergunta wpp_capture
+          const wppIdx = pergAtivas.findIndex(p => p.id === 'wpp_capture');
+          const insereEm = wppIdx > -1 ? wppIdx + 1 : qIdx + 1;
+          pergAtivas.splice(insereEm, 0, pergunta_clinica);
+          respostas.splice(insereEm, 0, null);
+        } else if (!querClinica && isPJ) {
+          isPJ = false;
+          const idx = pergAtivas.indexOf(pergunta_clinica);
+          if (idx > -1) { pergAtivas.splice(idx, 1); respostas.splice(idx, 1); }
+        }
+      }
+      respostas[qIdx] = i;
+      cont.querySelectorAll('.op').forEach(b => b.classList.remove('ativa'));
+      btn.classList.add('ativa');
+      document.getElementById('btn-av').disabled = false;
+    });
+    cont.appendChild(btn);
+  });
+
+  document.getElementById('btn-av').disabled = respostas[qIdx] === null;
+  document.getElementById('btn-av').textContent = qIdx === pergAtivas.length - 1 ? 'Ver meu resultado →' : 'Continuar →';
+
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  requestAnimationFrame(() => { card.style.animation = 'entra 0.32s ease both'; });
+}
+
+function voltar() {
+  if (qIdx > 0) { qIdx--; renderQ(); }
+  else {
+    document.getElementById('tela-quiz').style.display = 'none';
+    document.getElementById('prog').style.display = 'none';
+    document.getElementById('tela-intro').style.display = 'block';
+  }
+}
+
+function avancar() {
+  // Salva WPP se for a tela de captura
+  if (pergAtivas[qIdx].tipo === 'wpp') {
+    const inp = document.getElementById('wpp-inline');
+    if (!inp || inp.value.replace(/\D/g,'').length < 10) {
+      document.getElementById('err-wpp-inline').style.display = 'block';
+      return;
+    }
+    captura.wpp = inp.value.trim();
+    respostas[qIdx] = 'captured';
+  }
+  if (qIdx < pergAtivas.length - 1) { qIdx++; renderQ(); }
+  else { finalizar(); }
+}
+
+function finalizar() {
+  document.getElementById('tela-quiz').style.display = 'none';
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('tela-loading').style.display = 'block';
+  setTimeout(mostrarResultado, 2000);
+}
+
+// ── CÁLCULO ──
+function calcScore() {
+  let total = 0, count = 0;
+  pergAtivas.forEach((q, i) => {
+    if (q.id === 'pj' || q.tipo === 'wpp') return;
+    if (respostas[i] !== null && respostas[i] !== 'captured') {
+      total += q.opcoes[respostas[i]].p;
+      count++;
+    }
+  });
+  const mediaRisco = count > 0 ? total / count : 50;
+  return Math.round(100 - mediaRisco);
+}
+
+function nivel(s) {
+  if (s >= 78) return { classe: 'protegido', label: 'PATRIMÔNIO PROTEGIDO',  titulo: 'Estrutura sólida',        frase: 'Seu patrimônio está preparado para sobreviver sem você.',
+    ctaT: 'O próximo passo revela o que o scanner não mede',
+    ctaD: 'O Scanner identificou a estrutura. O Diagnóstico mede o tamanho real das lacunas — e o que ainda pode ser otimizado antes que alguém o faça por você.' };
+  if (s >= 55) return { classe: 'parcial',   label: 'PROTEÇÃO PARCIAL',      titulo: 'Vulnerabilidades reais', frase: 'Parte do que você construiu está em risco sem que você perceba.',
+    ctaT: 'O scanner mostra onde. O diagnóstico mostra quanto.',
+    ctaD: 'Cada risco identificado aqui tem um tamanho real — em reais, em anos, em impacto sobre a sua família. O Diagnóstico Patrimonial Completo mede isso com precisão.' };
+  if (s >= 35) return { classe: 'risco',     label: 'ZONA DE RISCO',         titulo: 'Exposição significativa', frase: 'Hoje sua renda depende mais de você do que do seu patrimônio.',
+    ctaT: 'Você descobriu o problema. Falta saber o tamanho.',
+    ctaD: 'O scanner revelou os vetores de exposição. O Diagnóstico Patrimonial Completo quantifica cada um — e entrega as ações em ordem de urgência e impacto.' };
+  return         { classe: 'critico',   label: 'PATRIMÔNIO VULNERÁVEL', titulo: 'Exposição crítica',       frase: 'Seu patrimônio não está preparado para uma interrupção inesperada da sua carreira.',
+    ctaT: 'O scanner revelou o risco. O diagnóstico define o tamanho antes que ele te encontre.',
+    ctaD: 'Você não pode tomar uma decisão de proteção sem saber o tamanho real do que está em jogo. O Diagnóstico Patrimonial Completo faz exatamente isso.' };
+}
+
+function getRiscos() {
+  const lista = [];
+  pergAtivas.forEach((q, i) => {
+    if (!q.risco || respostas[i] === null || respostas[i] === 'captured') return;
+    const p = q.opcoes[respostas[i]].p;
+    if (p >= 35) lista.push({ ...q.risco, p, id: q.id });
+  });
+  return lista.sort((a, b) => b.p - a.p).slice(0, 3);
+}
+
+function getDescoberta(riscos, score) {
+  if (riscos.length === 0) return 'Você construiu uma estrutura patrimonial acima da média. O Diagnóstico completo identificará os pontos de refinamento que estruturas bem construídas frequentemente deixam passar — e o tamanho real do que ainda pode ser otimizado.';
+  const principal = riscos[0];
+  const descobertas = {
+    'dependencia':  'Você provavelmente acredita que seu maior risco é um processo médico. Não é. Seu maior risco é que a maior parte da sua renda ainda depende exclusivamente da sua presença física — e você ainda não sabe por quanto tempo isso vai durar.',
+    'processo':     'Você acredita que seus bens estão protegidos. Mas sem blindagem patrimonial formalizada, qualquer processo médico pode atingir imóveis e investimentos que você considera intocáveis. O tamanho real dessa exposição você ainda não conhece.',
+    'previdencia':  'Você sabe que precisa se preparar para o futuro. O que você ainda não sabe é o número exato — quanto precisa acumular para manter seu padrão de vida quando os plantões diminuírem. E sem esse número, qualquer planejamento é só intenção.',
+    'sucessao':     'Você acredita que seu patrimônio chegará a quem você quer. Mas sem planejamento sucessório, o inventário judicial pode consumir entre 10% e 30% do que você construiu. Em um patrimônio de R$ 3 milhões, isso representa até R$ 900 mil que não chegarão a ninguém que você escolheu.',
+    'clinica':      'Você acredita que tem um negócio. Mas se a clínica não funciona sem você, o que você tem é um emprego com CNPJ. E um emprego não é um ativo — é um compromisso. O tamanho real desse risco ainda precisa ser mapeado.'
+  };
+  return descobertas[principal.id] || 'O scanner identificou vulnerabilidades relevantes. O tamanho real de cada uma delas — e o que fazer primeiro — é o que o Diagnóstico completo revela.';
+}
+
+// ── Números nos riscos ──
+const riscosComNumeros = {
+  'dependencia':  { label: 'Sua renda depende quase inteiramente da sua presença física', detalhe: 'Uma incapacidade de 6 meses sem cobertura de renda pode forçar a liquidação de patrimônio que levou anos para construir — no pior momento psicológico possível.' },
+  'processo':     { label: 'Seu patrimônio pessoal está exposto a processos médicos', detalhe: 'Uma decisão judicial desfavorável pode executar imóveis e investimentos pessoais. Sem blindagem patrimonial, não existe separação real entre o que é seu e o que pode ser tomado.' },
+  'previdencia':  { label: 'Não há estrutura de independência financeira para além dos plantões', detalhe: 'O INSS cobre em média 15% da renda ativa de médicos. Para manter R$ 30 mil mensais na aposentadoria, são necessários aproximadamente R$ 7,2 milhões acumulados. Você sabe quanto tem hoje?' },
+  'sucessao':     { label: 'Não existe estrutura sucessória formal', detalhe: 'Inventário judicial consome entre 10% e 30% do patrimônio em impostos e custos processuais — além de 2 a 5 anos de processo. Em um patrimônio de R$ 5 milhões, isso representa até R$ 1,5 milhão que não chegará a ninguém.' },
+  'clinica':      { label: 'A clínica não sobrevive sem você — isso é risco patrimonial direto', detalhe: 'Uma clínica dependente do sócio-fundador não tem valor de mercado real. Se você parar, o negócio para. E todo o patrimônio construído dentro da PJ fica exposto junto.' }
+};
+
+function mostrarResultado() {
+  document.getElementById('tela-loading').style.display = 'none';
+  document.getElementById('prog').style.display = 'none';
+  document.getElementById('tela-resultado').style.display = 'block';
+
+  const score = calcScore();
+  const nv = nivel(score);
+  const riscos = getRiscos();
+  const nomeDisplay = captura.nome;
+
+  // Score e nome
+  document.getElementById('res-nome').textContent = nomeDisplay;
+  document.getElementById('score-num').textContent = score;
+
+  // Anel animado
+  const ring = document.getElementById('ring-fill');
+  ring.className = 'ring-fill ' + nv.classe;
+  const circ = 2 * Math.PI * 48;
+  setTimeout(() => {
+    ring.style.strokeDashoffset = circ - (circ * score / 100);
+  }, 150);
+
+  // Nível
+  const badge = document.getElementById('nivel-badge');
+  badge.className = 'nivel-badge nivel-' + nv.classe;
+  document.getElementById('nivel-label').textContent = nv.label;
+  document.getElementById('nivel-titulo').textContent = nv.titulo;
+
+  // Descoberta principal — com id do risco mais crítico
+  document.getElementById('descoberta-texto').textContent = getDescoberta(riscos, score);
+
+  // Riscos com números
+  const listaEl = document.getElementById('riscos-lista');
+  listaEl.innerHTML = '';
+
+  if (riscos.length > 0) {
+    document.getElementById('riscos-titulo').textContent = 'Principais riscos identificados';
+    riscos.forEach(r => {
+      // Enriquece com versão com números se disponível
+      const enrich = riscosComNumeros[r.id] || r;
+      listaEl.innerHTML += `
+        <div class="risco-item">
+          <span class="risco-icon">▲</span>
+          <div class="risco-txt">
+            <strong>${enrich.label}</strong>
+            <span>${enrich.detalhe}</span>
+          </div>
+        </div>`;
+    });
+  } else {
+    document.getElementById('riscos-titulo').textContent = 'Pontos de solidez confirmados';
+    ['Proteção patrimonial e cobertura de risco estruturadas','Renda diversificada além da presença física','Continuidade e sucessão formalizadas'].forEach(t => {
+      listaEl.innerHTML += `<div class="forte-item"><span class="forte-icon">✓</span><span>${t}</span></div>`;
+    });
+  }
+
+  // CTA — tensão aberta: scanner revela, diagnóstico mede o tamanho
+  document.getElementById('cta-titulo').textContent = nv.ctaT;
+  document.getElementById('cta-desc').textContent = nv.ctaD;
+
+  const msg = encodeURIComponent(`Olá Ivan, fiz o Scanner Continuidade Médica™ e quero agendar meu Diagnóstico Patrimonial completo.`);
+  document.getElementById('btn-wpp').href = `https://wa.me/${CONFIG.wpp}?text=${msg}`;
+  document.getElementById('btn-diag').href = CONFIG.landing;
+
+  // Envia dados para Google Sheets
+  enviarWebhook(score, nv.label);
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
